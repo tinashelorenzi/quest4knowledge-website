@@ -152,6 +152,10 @@
             </div>
         </div>
     </section>
+    </section>
+
+    @include('partials.contact-form')
+
 
     <footer class="footer" id="contact">
         <div class="container">
