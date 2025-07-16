@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Quest4Knowledge - Tutor Application</title>
+    <title>Quest4Knowledge - Tutor Registration Form</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -53,10 +53,16 @@
         .form-step {
             display: none;
             padding: 40px;
+            animation: fadeIn 0.3s ease-in;
         }
 
         .form-step.active {
             display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .step-indicator {
@@ -92,6 +98,7 @@
             line-height: 30px;
             margin-bottom: 5px;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
 
         .step-title {
@@ -103,73 +110,155 @@
             margin-bottom: 25px;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-row.single {
-            grid-template-columns: 1fr;
-        }
-
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #8000ff;
+            font-weight: 500;
+            color: #333;
         }
 
         .required {
-            color: #ff4444;
+            color: #e74c3c;
         }
 
-        input, select, textarea {
+        .description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row > div {
+            flex: 1;
+        }
+
+        .form-row.single {
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #8000ff;
             border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #6600cc;
-            box-shadow: 0 0 0 3px rgba(128, 0, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(128, 0, 255, 0.2);
         }
 
-        .checkbox-group, .radio-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
-            margin-top: 10px;
         }
 
-        .checkbox-item, .radio-item {
+        .checkbox-item,
+        .radio-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 10px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            cursor: pointer;
             transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 120px;
         }
 
-        .checkbox-item:hover, .radio-item:hover {
+        .checkbox-item:hover,
+        .radio-item:hover {
             border-color: #8000ff;
             background: rgba(128, 0, 255, 0.05);
         }
 
-        .checkbox-item input, .radio-item input {
-            width: auto;
-            margin-right: 10px;
+        .checkbox-item input,
+        .radio-item input {
+            margin-right: 8px;
+        }
+
+        .checkbox-item input:checked + label,
+        .radio-item input:checked + label {
+            color: #8000ff;
+            font-weight: 600;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #8000ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6600cc;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-submit {
+            background: #FFD700;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .btn-submit:hover {
+            background: #FFC800;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .file-upload {
             position: relative;
-            display: inline-block;
-            width: 100%;
+            display: block;
         }
 
         .file-upload input[type="file"] {
@@ -182,16 +271,17 @@
 
         .file-upload-label {
             display: block;
-            padding: 20px;
+            padding: 30px;
             border: 2px dashed #8000ff;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: rgba(128, 0, 255, 0.05);
         }
 
         .file-upload-label:hover {
-            background: rgba(128, 0, 255, 0.05);
+            background: rgba(128, 0, 255, 0.1);
         }
 
         .file-upload-icon {
@@ -200,100 +290,51 @@
             margin-bottom: 10px;
         }
 
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
         }
 
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8000ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
 
-        .btn-primary {
-            background: #8000ff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #6600cc;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #666;
-        }
-
-        .btn-secondary:hover {
-            background: #d0d0d0;
-        }
-
-        .btn-submit {
-            background: #FFD700;
-            color: #8000ff;
-        }
-
-        .btn-submit:hover {
-            background: #FFC800;
-            transform: translateY(-2px);
-        }
-
-        .error-message {
-            color: #ff4444;
-            font-size: 14px;
-            margin-top: 5px;
-            background: rgba(255, 68, 68, 0.1);
-            padding: 8px 12px;
-            border-radius: 4px;
-            border-left: 3px solid #ff4444;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .success-message {
             text-align: center;
             padding: 30px;
-            background: rgba(76, 175, 80, 0.1);
-            border: 2px solid #4CAF50;
+            background: #8000ff;
+            color: white;
             border-radius: 8px;
-            margin: 20px 0;
         }
 
         .success-message h3 {
-            color: #4CAF50;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: white;
         }
 
-        .success-message i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
-        .loading {
-            text-align: center;
+        .consent-box {
+            border: 2px solid #8000ff;
             padding: 20px;
-            display: none;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(128, 0, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #8000ff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            border-radius: 8px;
+            background: rgba(128, 0, 255, 0.05);
         }
 
         @media (max-width: 768px) {
@@ -305,10 +346,6 @@
                 padding: 20px;
             }
 
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
             .step-indicator {
                 padding: 15px 20px;
             }
@@ -316,13 +353,27 @@
             .step-title {
                 font-size: 0.8rem;
             }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+
+            .checkbox-group,
+            .radio-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-header">
-            <h1><i class="fas fa-graduation-cap"></i> Join Our Team</h1>
+            <h1><i class="fas fa-graduation-cap"></i> Tutor Registration Form</h1>
             <p>Apply to become a tutor with Quest4Knowledge</p>
         </div>
 
@@ -334,7 +385,7 @@
                 </div>
                 <div class="step" data-step="2">
                     <div class="step-number">2</div>
-                    <div class="step-title">Education & Qualifications</div>
+                    <div class="step-title">Education and Qualifications</div>
                 </div>
                 <div class="step" data-step="3">
                     <div class="step-number">3</div>
@@ -346,7 +397,7 @@
                 </div>
                 <div class="step" data-step="5">
                     <div class="step-number">5</div>
-                    <div class="step-title">Consent & Review</div>
+                    <div class="step-title">Consent and Review</div>
                 </div>
             </div>
 
@@ -415,7 +466,7 @@
                                 <input type="text" name="state" id="state" placeholder="State/Province" required>
                             </div>
                             <div>
-                                <input type="text" name="zip_code" id="zip_code" placeholder="ZIP/Postal Code" required>
+                                <input type="text" name="zip_code" id="zip_code" placeholder="ZIP / Postal Code" required>
                             </div>
                         </div>
                     </div>
@@ -431,9 +482,10 @@
                     <h2>Education & Qualifications</h2>
                     
                     <div class="form-group">
-                        <label for="education_level">Highest Level of Education <span class="required">*</span></label>
+                        <label for="highest_qualification">Highest Level of Education <span class="required">*</span></label>
+                        <div class="description">What is your Highest Level of Education?</div>
                         <select name="education_level" id="education_level" required>
-                            <option value="">Select Education Level</option>
+                            <option value="">Select your highest qualification</option>
                             <option value="High School">High School (Matric)</option>
                             <option value="Bachelors">BSc (Bachelors)</option>
                             <option value="MSc(Masters)">MSc (Masters)</option>
@@ -444,7 +496,7 @@
 
                     <div class="form-group">
                         <label>Tutoring Subjects (High School) <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">What subjects/courses are you willing to teach?</p>
+                        <div class="description">What subjects/courses are you willing to teach?</div>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="checkbox" name="tutoring_subjects[]" value="Mathematics" id="math">
@@ -495,52 +547,53 @@
 
                     <div class="form-group">
                         <label for="other_subjects">Other Subjects</label>
-                        <textarea name="other_subjects" id="other_subjects" rows="3" placeholder="If other subjects not provided above, please specify them separated by a comma"></textarea>
+                        <div class="description">If other subjects not provided above, please specify them separated by a comma</div>
+                        <textarea name="other_subjects" id="other_subjects" placeholder="E.g. French, German, Art, etc."></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Academic Transcript (High School)</label>
-                        <p style="color: #666; margin-bottom: 15px;">Please upload a copy of your Matric Academic Transcript</p>
+                        <label>Academic Transcript (High School) <span class="required">*</span></label>
+                        <div class="description">Please upload a copy of your Matric Academic Transcript</div>
                         <div class="file-upload">
-                            <input type="file" name="matric_transcript" id="matric_transcript" accept=".pdf,.jpg,.jpeg,.png">
-                            <label for="matric_transcript" class="file-upload-label">
+                                                         <input type="file" name="matric_transcript" id="matric_transcript" required>
+                                                         <label for="matric_transcript" class="file-upload-label">
                                 <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                                 <div>Click to upload or drag and drop</div>
-                                <div style="font-size: 14px; color: #888;">PDF, JPG, PNG (max 8MB)</div>
+                                <div style="font-size: 14px; color: #888;">Max 8MB</div>
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Academic Transcript (University/College)</label>
-                        <p style="color: #666; margin-bottom: 15px;">Please upload a copy of your University or College Transcript if applicable</p>
+                        <label>Academic Transcript (Uni/College)</label>
+                        <div class="description">Please upload a copy of your University or College Transcript if applicable</div>
                         <div class="file-upload">
-                            <input type="file" name="university_transcript" id="university_transcript" accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" name="university_transcript" id="university_transcript">
                             <label for="university_transcript" class="file-upload-label">
                                 <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                                 <div>Click to upload or drag and drop</div>
-                                <div style="font-size: 14px; color: #888;">PDF, JPG, PNG (max 8MB)</div>
+                                <div style="font-size: 14px; color: #888;">Max 8MB</div>
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Teaching Certification <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">Do you have any teaching certifications? (This will not affect the outcome of your application)</p>
+                        <div class="description">Do you have any teaching certifications (This will not affect the outcome of your application)</div>
                         <div class="radio-group">
                             <div class="radio-item">
-                                <input type="radio" name="has_teaching_certification" value="1" id="cert-yes" required>
+                                                                 <input type="radio" name="has_teaching_certification" value="1" id="cert-yes" required>
                                 <label for="cert-yes">Yes</label>
                             </div>
                             <div class="radio-item">
-                                <input type="radio" name="has_teaching_certification" value="0" id="cert-no" required>
+                                                                 <input type="radio" name="has_teaching_certification" value="0" id="cert-no" required>
                                 <label for="cert-no">No</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous Step</button>
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next Step <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -550,21 +603,21 @@
                     <h2>Teaching Experience</h2>
                     
                     <div class="form-group">
-                        <label for="teaching_experience_years">Teaching Experience <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">How many years of teaching/tutoring experience do you have (Formal and informal)?</p>
-                        <input type="number" name="teaching_experience_years" id="teaching_experience_years" min="1" max="150" placeholder="e.g. 5" required>
+                        <label for="teaching_experience">Teaching Experience <span class="required">*</span></label>
+                        <div class="description">How many years of teaching/tutoring experience do you have (Formal and informal)?</div>
+                                                 <input type="number" name="teaching_experience_years" id="teaching_experience_years" min="1" max="150" placeholder="e.g., 2" required>
                     </div>
 
                     <div class="form-group">
                         <label>Online Tutoring <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">Are you able to perform online tutoring?</p>
+                        <div class="description">Are you able to perform online tutoring?</div>
                         <div class="radio-group">
                             <div class="radio-item">
-                                <input type="radio" name="can_do_online_tutoring" value="1" id="online-yes" required>
+                                                                 <input type="radio" name="can_do_online_tutoring" value="1" id="online-yes" required>
                                 <label for="online-yes">Yes</label>
                             </div>
                             <div class="radio-item">
-                                <input type="radio" name="can_do_online_tutoring" value="0" id="online-no" required>
+                                                                 <input type="radio" name="can_do_online_tutoring" value="0" id="online-no" required>
                                 <label for="online-no">No</label>
                             </div>
                         </div>
@@ -572,7 +625,7 @@
 
                     <div class="form-group">
                         <label>Teaching Methods <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">What teaching methods are you able to conduct?</p>
+                        <div class="description">What teaching methods are you able to conduct?</div>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="checkbox" name="teaching_methods[]" value="Online" id="method-online">
@@ -591,53 +644,53 @@
 
                     <div class="form-group">
                         <label>Tutoring Days <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">What days are you available for tutoring?</p>
+                        <div class="description">What days are you available for tutoring?</div>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Sunday" id="day-sun">
-                                <label for="day-sun">Sunday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Sunday" id="day-sunday">
+                                <label for="day-sunday">Sunday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Monday" id="day-mon">
-                                <label for="day-mon">Monday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Monday" id="day-monday">
+                                <label for="day-monday">Monday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Tuesday" id="day-tue">
-                                <label for="day-tue">Tuesday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Tuesday" id="day-tuesday">
+                                <label for="day-tuesday">Tuesday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Wednesday" id="day-wed">
-                                <label for="day-wed">Wednesday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Wednesday" id="day-wednesday">
+                                <label for="day-wednesday">Wednesday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Thursday" id="day-thu">
-                                <label for="day-thu">Thursday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Thursday" id="day-thursday">
+                                <label for="day-thursday">Thursday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Friday" id="day-fri">
-                                <label for="day-fri">Friday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Friday" id="day-friday">
+                                <label for="day-friday">Friday</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_days[]" value="Saturday" id="day-sat">
-                                <label for="day-sat">Saturday</label>
+                                                                 <input type="checkbox" name="available_days[]" value="Saturday" id="day-saturday">
+                                <label for="day-saturday">Saturday</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Tutoring Times <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">What time slots are you available?</p>
+                        <div class="description">What time slots are you available?</div>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_times[]" value="Morning" id="time-morning">
+                                                                 <input type="checkbox" name="available_times[]" value="Morning" id="time-morning">
                                 <label for="time-morning">Morning</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_times[]" value="Afternoon" id="time-afternoon">
+                                                                 <input type="checkbox" name="available_times[]" value="Afternoon" id="time-afternoon">
                                 <label for="time-afternoon">Afternoon</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" name="available_times[]" value="Evening" id="time-evening">
+                                                                 <input type="checkbox" name="available_times[]" value="Evening" id="time-evening">
                                 <label for="time-evening">Evening</label>
                             </div>
                         </div>
@@ -645,21 +698,21 @@
 
                     <div class="form-group">
                         <label>Flexible Scheduling <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">Are you open and available for flexible scheduling?</p>
-                        <div class="radio-group">
-                            <div class="radio-item">
-                                <input type="radio" name="flexible_scheduling" value="1" id="flexible-yes" required>
-                                <label for="flexible-yes">Yes</label>
-                            </div>
-                            <div class="radio-item">
-                                <input type="radio" name="flexible_scheduling" value="0" id="flexible-no" required>
-                                <label for="flexible-no">No</label>
-                            </div>
+                        <div class="description">Are you open and available for flexible scheduling?</div>
+                        <div class="checkbox-group">
+                                                         <div class="radio-item">
+                                 <input type="radio" name="flexible_scheduling" value="1" id="flexible-yes" required>
+                                 <label for="flexible-yes">Yes</label>
+                             </div>
+                             <div class="radio-item">
+                                 <input type="radio" name="flexible_scheduling" value="0" id="flexible-no" required>
+                                 <label for="flexible-no">No</label>
+                             </div>
                         </div>
                     </div>
 
                     <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous Step</button>
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next Step <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -670,32 +723,32 @@
                     
                     <div class="form-group">
                         <label>ID Document/Passport <span class="required">*</span></label>
-                        <p style="color: #666; margin-bottom: 15px;">Please upload your relevant Identity Documentation</p>
+                        <div class="description">Please upload your relevant Identity Documentation</div>
                         <div class="file-upload">
-                            <input type="file" name="id_document" id="id_document" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <input type="file" name="id_document" id="id_document" required>
                             <label for="id_document" class="file-upload-label">
                                 <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                                 <div>Click to upload or drag and drop</div>
-                                <div style="font-size: 14px; color: #888;">PDF, JPG, PNG (max 8MB)</div>
+                                <div style="font-size: 14px; color: #888;">Max 8MB</div>
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Police Clearance (Advised)</label>
-                        <p style="color: #666; margin-bottom: 15px;">Please upload a valid police clearance. It is optional however advised to increase chances of acceptance</p>
+                        <div class="description">Please upload a valid police clearance, it is optional however advised to increase chances of acceptance</div>
                         <div class="file-upload">
-                            <input type="file" name="police_clearance" id="police_clearance" accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" name="police_clearance" id="police_clearance">
                             <label for="police_clearance" class="file-upload-label">
                                 <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                                 <div>Click to upload or drag and drop</div>
-                                <div style="font-size: 14px; color: #888;">PDF, JPG, PNG (max 8MB)</div>
+                                <div style="font-size: 14px; color: #888;">Max 8MB</div>
                             </label>
                         </div>
                     </div>
 
                     <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous Step</button>
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next Step <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -712,13 +765,15 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="checkbox-item" style="border: 2px solid #8000ff; padding: 20px;">
-                            <input type="checkbox" name="consent" id="consent" required>
-                            <label for="consent">
-                                <strong>Consent <span class="required">*</span></strong><br>
-                                Yes, I agree with the privacy policy and terms and conditions.<br>
-                                I furthermore agree that the information provided is truthful to the best of my ability and accept rejection in the event that it is not.
-                            </label>
+                        <div class="consent-box">
+                            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                <input type="checkbox" name="consent" id="consent" required style="margin-top: 5px;">
+                                <label for="consent">
+                                    <strong>Consent <span class="required">*</span></strong><br>
+                                    Yes, I agree with the <a href="#" target="_blank" style="color: #8000ff;">privacy policy</a> and <a href="#" target="_blank" style="color: #8000ff;">terms and conditions</a>.<br>
+                                    I furthermore agree that the information provided is truthful to the best of my ability and accept rejection in the event that it is not.
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -729,11 +784,11 @@
 
                     <div id="successMessage" class="success-message" style="display: none;">
                         <h3><i class="fas fa-check-circle"></i> Application Submitted Successfully!</h3>
-                        <p>Thank you for completing your application. We will reach out to you by email soon!</p>
+                        <p>Thank you for completing your application, we will reach out to you by email soon!</p>
                     </div>
 
                     <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous Step</button>
                         <button type="submit" class="btn btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Application</button>
                     </div>
                 </div>
@@ -744,6 +799,12 @@
     <script>
         let currentStep = 1;
         const totalSteps = 5;
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Tutor Registration Form initialized');
+            showStep(1);
+        });
 
         function updateStepIndicator() {
             console.log('Updating step indicator, current step:', currentStep);
@@ -761,101 +822,100 @@
 
         function showStep(step) {
             console.log('Showing step:', step);
-            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-            const targetStep = document.querySelector(`[data-step="${step}"]`);
+            
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(s => {
+                s.classList.remove('active');
+            });
+            
+            // Show current step
+            const targetStep = document.querySelector(`.form-step[data-step="${step}"]`);
             if (targetStep) {
                 targetStep.classList.add('active');
                 console.log('Step', step, 'is now active');
             } else {
                 console.error('Step element not found for step:', step);
             }
+            
+            currentStep = step;
             updateStepIndicator();
+            
+            // Scroll to top of form
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
         }
 
         function nextStep() {
-            console.log('Next step called, current step:', currentStep);
-            if (validateCurrentStep()) {
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
+            console.log('Next step requested, current:', currentStep);
+            
+            if (!validateCurrentStep()) {
+                console.log('Validation failed for step:', currentStep);
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                showStep(currentStep + 1);
             }
         }
 
         function prevStep() {
-            console.log('Previous step called, current step:', currentStep);
+            console.log('Previous step requested, current:', currentStep);
+            
             if (currentStep > 1) {
-                currentStep--;
-                showStep(currentStep);
+                showStep(currentStep - 1);
             }
         }
 
         function validateCurrentStep() {
-            console.log('Validating step:', currentStep);
-            const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
-            if (!currentStepElement) {
-                console.error('Current step element not found');
-                return false;
-            }
-            
-            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
             let isValid = true;
 
             // Clear previous error messages
-            currentStepElement.querySelectorAll('.error-message').forEach(msg => msg.remove());
+            document.querySelectorAll('.error-message').forEach(error => error.remove());
 
             requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    showError(field, 'This field is required');
-                    isValid = false;
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    if (field.name.includes('[]')) {
+                        // For checkbox groups
+                        const checkboxGroup = currentStepElement.querySelectorAll(`input[name="${field.name}"]`);
+                        const isChecked = Array.from(checkboxGroup).some(cb => cb.checked);
+                        if (!isChecked) {
+                            showFieldError(field, 'Please select at least one option');
+                            isValid = false;
+                        }
+                    } else {
+                        // For radio groups
+                        const radioGroup = currentStepElement.querySelectorAll(`input[name="${field.name}"]`);
+                        const isChecked = Array.from(radioGroup).some(rb => rb.checked);
+                        if (!isChecked) {
+                            showFieldError(field, 'Please select an option');
+                            isValid = false;
+                        }
+                    }
+                } else if (field.type === 'file') {
+                    if (!field.files.length) {
+                        showFieldError(field, 'Please select a file');
+                        isValid = false;
+                    }
+                } else {
+                    if (!field.value.trim()) {
+                        showFieldError(field, 'This field is required');
+                        isValid = false;
+                    }
                 }
             });
 
-            // Special validation for checkbox groups
-            if (currentStep === 2) {
-                const subjects = currentStepElement.querySelectorAll('input[name="tutoring_subjects[]"]:checked');
-                if (subjects.length === 0) {
-                    showError(document.querySelector('input[name="tutoring_subjects[]"]').closest('.form-group'), 'Please select at least one subject');
-                    isValid = false;
-                }
-            }
-
-            if (currentStep === 3) {
-                const methods = currentStepElement.querySelectorAll('input[name="teaching_methods[]"]:checked');
-                const days = currentStepElement.querySelectorAll('input[name="available_days[]"]:checked');
-                const times = currentStepElement.querySelectorAll('input[name="available_times[]"]:checked');
-
-                if (methods.length === 0) {
-                    showError(document.querySelector('input[name="teaching_methods[]"]').closest('.form-group'), 'Please select at least one teaching method');
-                    isValid = false;
-                }
-                if (days.length === 0) {
-                    showError(document.querySelector('input[name="available_days[]"]').closest('.form-group'), 'Please select at least one day');
-                    isValid = false;
-                }
-                if (times.length === 0) {
-                    showError(document.querySelector('input[name="available_times[]"]').closest('.form-group'), 'Please select at least one time slot');
-                    isValid = false;
-                }
-            }
-
-            console.log('Validation result:', isValid);
             return isValid;
         }
 
-        function showError(element, message) {
+        function showFieldError(field, message) {
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
-            errorDiv.style.color = '#ff4444';
-            errorDiv.style.fontSize = '14px';
-            errorDiv.style.marginTop = '5px';
             errorDiv.textContent = message;
             
-            if (element.closest('.form-group')) {
-                element.closest('.form-group').appendChild(errorDiv);
-            } else {
-                element.parentNode.insertBefore(errorDiv, element.nextSibling);
-            }
+            // Insert error message after the field's parent container
+            const parent = field.closest('.form-group') || field.parentNode;
+            parent.appendChild(errorDiv);
         }
 
         // Form submission
@@ -886,16 +946,17 @@
 
                 const result = await response.json();
 
-                if (result.success) {
-                    loadingDiv.style.display = 'none';
-                    successMessage.style.display = 'block';
-                    submitBtn.style.display = 'none';
-                    
-                    // Scroll to success message
-                    successMessage.scrollIntoView({ behavior: 'smooth' });
-                } else {
+                if (!result.success) {
                     throw new Error(result.message || 'Application submission failed');
                 }
+
+                loadingDiv.style.display = 'none';
+                successMessage.style.display = 'block';
+                submitBtn.style.display = 'none';
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
             } catch (error) {
                 loadingDiv.style.display = 'none';
                 submitBtn.disabled = false;
@@ -910,10 +971,11 @@
                 const label = this.nextElementSibling;
                 if (this.files.length > 0) {
                     const fileName = this.files[0].name;
+                    const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2);
                     label.innerHTML = `
                         <div class="file-upload-icon"><i class="fas fa-check-circle" style="color: green;"></i></div>
                         <div>${fileName}</div>
-                        <div style="font-size: 14px; color: #888;">File selected successfully</div>
+                        <div style="font-size: 14px; color: #888;">File selected successfully (${fileSize} MB)</div>
                     `;
                     label.style.background = 'rgba(0, 128, 0, 0.05)';
                     label.style.borderColor = 'green';
@@ -921,10 +983,33 @@
             });
         });
 
-        // Initialize
-        console.log('Initializing tutor application form...');
-        updateStepIndicator();
-        console.log('Form initialized successfully');
+        // Email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            // Remove previous error
+            const existingError = this.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            if (email && !emailRegex.test(email)) {
+                showFieldError(this, 'Please enter a valid email address');
+            }
+        });
+
+        // Prevent form submission on Enter key (except for textarea)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                if (e.target.closest('.form-step')) {
+                    nextStep();
+                }
+            }
+        });
+
+        console.log('Tutor application form script loaded successfully');
     </script>
 </body>
 </html>

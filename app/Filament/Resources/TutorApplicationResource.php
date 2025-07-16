@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components;
+use Illuminate\Support\Facades\Storage;
 
 class TutorApplicationResource extends Resource
 {
@@ -74,7 +75,7 @@ class TutorApplicationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('education_level')
                     ->badge(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'approved',
