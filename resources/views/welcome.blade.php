@@ -22,59 +22,7 @@
     </div>
 
     <div class="container">
-        <nav>
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                QUEST4KNOWLEDGE
-            </div>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#services">Services</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#contact">Contact</a>
-            </div>
-            <div class="auth-links">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                @endif
-                <a href="#request" class="cta-nav">REQUEST A TUTOR</a>
-            </div>
-            <button class="mobile-menu-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
-
-        <!-- Mobile Menu -->
-        <div class="mobile-menu">
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact</a></li>
-                @if (Route::has('login'))
-                    @auth
-                        <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                    @else
-                        <li><a href="{{ route('login') }}">Login</a></li>
-                        @if (Route::has('register'))
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @endif
-                    @endauth
-                @endif
-                <li><a href="#request" class="cta-nav" style="display: inline-block; margin-top: 20px;">REQUEST A TUTOR</a></li>
-            </ul>
-        </div>
+        @include('partials.navbar')
 
         <section class="hero" id="home">
             <div class="hero-content">

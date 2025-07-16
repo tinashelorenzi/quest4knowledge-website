@@ -16,6 +16,11 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/tutor-application', [TutorApplicationController::class, 'create'])->name('tutor-application');
 Route::post('/tutor-application', [TutorApplicationController::class, 'store']);
 
+// Learning Portal (placeholder for now)
+Route::get('/learning-portal', function () {
+    return redirect('https://portal.quest4knowledge.co.za');
+})->name('learning-portal');
+
 
 // Pages
 Route::get('/request-tutor', function () {
