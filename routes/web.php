@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TutorApplicationController;
+use App\Http\Controllers\LeadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +15,12 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/tutor-application', [TutorApplicationController::class, 'create'])->name('tutor-application');
 Route::post('/tutor-application', [TutorApplicationController::class, 'store']);
+
+
+// Pages
+Route::get('/request-tutor', function () {
+    return view('request-tutor');
+})->name('request-tutor');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
